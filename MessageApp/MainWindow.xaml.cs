@@ -50,10 +50,9 @@ namespace MessageApp
                     if (msg.MessageType =="s")
                     {
                         build_SMS(tb_body.Text);
-
                     }
-                    if (msg.MessageType =="m") { }
-                    if (msg.MessageType =="t") { }
+                    if (msg.MessageType =="m") {}
+                    if (msg.MessageType =="t") { build_Twitter_Message(tb_body.Text); }
                 }
                 
             }
@@ -89,6 +88,24 @@ namespace MessageApp
             
         }
 
+        private void build_Twitter_Message(string body)
+        {
+            Tweet tweet = new Tweet();
+            tweet.MessageId = tb_header.Text;
+            tweet.Sender = body;
+            string message = this.filterTextSpeak(body);
+            tweet.Message = message;
+
+            tb_id.Text = tweet.MessageId;
+            tb_sender.Text = tweet.Sender;
+            tb_message.Text = tweet.Message;
+
+            buildTrendingList(tweet.Message);
+            buildMentionList(tweet.Message);
+            MessageBox.Show(tweet.Message);
+
+        }
+
         private string filterTextSpeak(string text)
         {
             string[] data = text.Trim().Split(' ');
@@ -101,10 +118,50 @@ namespace MessageApp
                 {
                     string word = key + " <" + this.testSpeak[key] + ">";
                     message.SetValue(word, i );
-                }
-                
+                }     
             }
             return String.Join(" ", message);
+        }
+
+        private void buildTrendingList(string text)
+        {
+            Dictionary<string, int> trendingList = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+            string patternHashtag = @"[\#][\w]{1,35}";
+            MatchCollection result = Regex.Matches(text, patternHashtag);
+
+            foreach (var item in result)
+            {
+                string key = item.ToString();
+                int val;
+                if (trendingList.TryGetValue(key, out val))
+                {
+                    trendingList[key] = val + 1;
+                } else
+                {
+                    trendingList.Add(key, 1);
+                }
+            }
+            foreach (var item in trendingList)
+            {
+                lb_trendList.Items.Add(item);
+            }
+
+        }
+
+        private void buildMentionList(string text)
+        {
+            string pattern = @"[\@][\w]{1,15}";
+            List<string> distinct = new List<string>();
+            MatchCollection result = Regex.Matches(text, pattern);
+            foreach (var item in result)
+            {
+                if (!distinct.Contains(item.ToString().ToLower()))
+                {
+                    distinct.Add(item.ToString());
+                }
+            }
+            lb_mentionList.ItemsSource = distinct;
+
         }
     }
 }
