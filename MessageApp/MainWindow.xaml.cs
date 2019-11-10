@@ -51,7 +51,7 @@ namespace MessageApp
                     {
                         build_SMS(tb_body.Text);
                     }
-                    if (msg.MessageType =="m") {}
+                    if (msg.MessageType =="m") { build_Email_Message(tb_body.Text); }
                     if (msg.MessageType =="t") { build_Twitter_Message(tb_body.Text); }
                 }
                 
@@ -106,6 +106,24 @@ namespace MessageApp
 
         }
 
+        private void build_Email_Message(string body)
+        {
+            Email email = new Email();
+            email.MessageId = tb_header.Text;
+            email.Sender = body;
+            string message = this.filterTextSpeak(body);
+            email.Message = message;
+
+            tb_id.Text = email.MessageId;
+            tb_sender.Text = email.Sender;
+            tb_message.Text = email.Message;
+
+            //buildTrendingList(email.Message);
+            //buildMentionList(email.Message);
+            MessageBox.Show(email.Message);
+
+        }
+
         private string filterTextSpeak(string text)
         {
             string[] data = text.Trim().Split(' ');
@@ -151,16 +169,16 @@ namespace MessageApp
         private void buildMentionList(string text)
         {
             string pattern = @"[\@][\w]{1,15}";
-            List<string> distinct = new List<string>();
+            List<string> mentionList = new List<string>();
             MatchCollection result = Regex.Matches(text, pattern);
             foreach (var item in result)
             {
-                if (!distinct.Contains(item.ToString().ToLower()))
+                if (!mentionList.Contains(item.ToString().ToLower()))
                 {
-                    distinct.Add(item.ToString());
+                    mentionList.Add(item.ToString());
                 }
             }
-            lb_mentionList.ItemsSource = distinct;
+            lb_mentionList.ItemsSource = mentionList;
 
         }
     }
