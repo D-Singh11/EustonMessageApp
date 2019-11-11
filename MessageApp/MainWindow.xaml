@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <TextBox x:Name="tb_header" HorizontalAlignment="Left" Height="23" Margin="75,20,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="122" MaxLength="10"/>
+        <TextBox x:Name="tb_header" HorizontalAlignment="Left" Height="23" Margin="75,20,0,0" TextWrapping="Wrap" Text="Header" VerticalAlignment="Top" Width="122" MaxLength="10"/>
         <TextBox x:Name="tb_body" HorizontalAlignment="Left" Height="118" Margin="75,59,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="192" AcceptsReturn="True" Text="" MaxLength="156"/>
         <Label x:Name="label" Content="Header" HorizontalAlignment="Left" Margin="22,17,0,0" VerticalAlignment="Top"/>
         <Label x:Name="label_Copy" Content="Body" HorizontalAlignment="Left" Margin="22,49,0,0" VerticalAlignment="Top"/>
@@ -19,8 +19,14 @@
         <Label x:Name="label1" Content="Id:" HorizontalAlignment="Left" Margin="22,233,0,0" VerticalAlignment="Top"/>
         <Label x:Name="label1_Copy" Content="Message" HorizontalAlignment="Left" Margin="15,291,0,0" VerticalAlignment="Top"/>
         <Label x:Name="label1_Copy1" Content="sender" HorizontalAlignment="Left" Margin="15,264,0,0" VerticalAlignment="Top"/>
-        <ListBox x:Name="lb_trendList" HorizontalAlignment="Left" Height="118" Margin="348,59,0,0" VerticalAlignment="Top" Width="130"/>
-        <ListBox x:Name="lb_mentionList" HorizontalAlignment="Left" Height="118" Margin="520,59,0,0" VerticalAlignment="Top" Width="130"/>
+        <ListBox x:Name="lb_trendList" HorizontalAlignment="Left" Height="118" Margin="484,126,0,0" VerticalAlignment="Top" Width="130"/>
+        <ListBox x:Name="lb_mentionList" HorizontalAlignment="Left" Height="118" Margin="639,126,0,0" VerticalAlignment="Top" Width="130"/>
+        <ListBox x:Name="lb_quarantinedList" HorizontalAlignment="Left" Height="118" Margin="484,279,0,0" VerticalAlignment="Top" Width="130"/>
+        <ListBox x:Name="lb_sirList" HorizontalAlignment="Left" Height="118" Margin="639,279,0,0" VerticalAlignment="Top" Width="130"/>
+        <Label x:Name="label2_Copy2" Content="Trend list" HorizontalAlignment="Left" Margin="524,100,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label2_Copy1" Content="Mention list" HorizontalAlignment="Left" Margin="668,100,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label2_Copy" Content="Quarantined list" HorizontalAlignment="Left" Margin="511,253,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label2" Content="SIR message list" HorizontalAlignment="Left" Margin="659,253,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>

@@ -10,7 +10,7 @@ namespace BusinessLayer
         private string sender;
         private string message;
 
-        string patternSender = @"[\@][\w]{1,15}\s";
+        string patternSender = @"^[\@][\w]{1,15}\s";
         string patternText = @"\s{1}[\+\D\w\s]{1,140}";
         public string Sender
         {
