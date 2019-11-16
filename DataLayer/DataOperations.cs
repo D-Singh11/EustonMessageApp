@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -92,8 +93,9 @@ namespace DataLayer
         public void saveMessageToFile(Object obj)
         {
             this.messageList.Add(obj);
-            StreamWriter writetoFile = new StreamWriter("people.txt", true);
-            writetoFile.WriteLine(obj);
+            StreamWriter writetoFile = new StreamWriter("people.json", true);
+            string messageToSave = JsonConvert.SerializeObject(obj);
+            writetoFile.WriteLine(messageToSave);
             writetoFile.Close();
 
         }

@@ -61,7 +61,6 @@ namespace BusinessLayer
                 }
             }
             mMessageType = message.Substring(0, 1).ToLower();
-            //tb_id.Text = message;
         }
     }
 }

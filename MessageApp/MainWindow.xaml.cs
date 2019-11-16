@@ -37,7 +37,7 @@ namespace MessageApp
             incidentList = dataOps.IncidentList;
         }
 
-        private void Bt_save_Click(object sender, RoutedEventArgs e)
+        private void Bt_Save_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -126,35 +126,6 @@ namespace MessageApp
 
         }
 
-        private Email parseEmail(string body)
-        {
-            string messageBody = body.ToLower();
-            string senderLb = "sender:";
-            string subjectLb = "subject:";
-            string textLb = "text:";
-            int a = messageBody.IndexOf(senderLb);
-            int b = messageBody.IndexOf(subjectLb);
-            int c = messageBody.IndexOf(textLb);
-            string sender, subject, text;
-            try
-            {
-                sender = messageBody.Substring(a + senderLb.Length, b - senderLb.Length);
-                subject = messageBody.Substring(b + subjectLb.Length, c - subjectLb.Length - b);
-                text = messageBody.Substring(c + textLb.Length);
-
-            }
-            catch
-            {
-                throw new Exception("Message body invlaid input.\nLabels must be correctly spelt and in following order:\nsender:\nsubject:\ntext:");
-            }
-            Email email = new Email();
-            email.MessageId = tb_header.Text;
-            email.Sender = sender;
-            email.Subject = subject;
-            email.Message = text;
-            return email;
-        }
-
         private string filterTextSpeak(string text)
         {
             string[] data = text.Trim().Split(' ');
@@ -238,18 +209,47 @@ namespace MessageApp
             return String.Join(" ", data);
         }
 
+        private Email parseEmail(string body)
+        {
+            string messageBody = body.ToLower();
+            string senderLb = "sender:";
+            string subjectLb = "subject:";
+            string textLb = "text:";
+            int a = messageBody.IndexOf(senderLb);
+            int b = messageBody.IndexOf(subjectLb);
+            int c = messageBody.IndexOf(textLb);
+            string sender, subject, text;
+            try
+            {
+                sender = messageBody.Substring(a + senderLb.Length, b - senderLb.Length);
+                subject = messageBody.Substring(b + subjectLb.Length, c - subjectLb.Length - b);
+                text = messageBody.Substring(c + textLb.Length);
+
+            }
+            catch
+            {
+                throw new Exception("Message body invlaid input.\nLabels must be correctly spelt and in following order:\nsender:\nsubject:\ntext:");
+            }
+            Email email = new Email();
+            email.MessageId = tb_header.Text;
+            email.Sender = sender;
+            email.Subject = subject;
+            email.Message = text;
+            return email;
+        }
+
         private void parseSirEmailText(string text)
         {
-            string messageBody = text.ToLower();
+            string messageBody = text.ToLower().Trim();
             string scLb = "sport centre code:";
             string incidentLb = "nature of incident:";
-            int a = messageBody.Trim().IndexOf(scLb);
-            int b = messageBody.Trim().IndexOf(incidentLb);
+            int a = messageBody.IndexOf(scLb);
+            int b = messageBody.IndexOf(incidentLb);
             string centreCode, incidentType;
             try
             {
-                centreCode = text.Trim().Substring(a + scLb.Length, b -scLb.Length).ToLower();
-                incidentType = text.Trim().Substring(b + incidentLb.Length, 20).ToLower();
+                centreCode = messageBody.Substring(a + scLb.Length, b - scLb.Length);
+                incidentType = messageBody.Substring(b + incidentLb.Length, 20);
                 string patternCentreCode = @"^[\d]{2}\-[\d]{3}\-[\d]{2}";
                 
                 if (!Regex.IsMatch(centreCode.Trim(), patternCentreCode))
@@ -285,7 +285,17 @@ namespace MessageApp
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void clearInputs()
+        {
+            tb_header.Clear();
+            tb_body.Clear();
+            lb_id.Content = "";
+            lb_sender.Content = "";
+            lb_message.Content = "";
+
+        }
+
+        private void Button_OpenFile_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -294,9 +304,7 @@ namespace MessageApp
                 foreach (var message in fileData)
                 {
                     lb_inputData.Items.Add(message);
-
                 }
-                //processMessage(fileData, fileData);
             }
             catch (Exception error)
             {
@@ -305,7 +313,7 @@ namespace MessageApp
             
         }
 
-        private void Lb_inputData_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void Lb_InputData_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (lb_inputData.SelectedValue == null)
             {
@@ -318,7 +326,7 @@ namespace MessageApp
                     string selctedMessage = lb_inputData.SelectedItem.ToString();
                     tb_header.Text = selctedMessage.Trim().Substring(0, 10);
                     tb_body.Text = selctedMessage.Replace(tb_header.Text, "").Trim();
-                    processMessage();
+                    //processMessage();                                         //only use if want to process on selction, otherwise click save
                 }
                 catch (Exception error)
                 {
@@ -327,17 +335,7 @@ namespace MessageApp
             }
         }
 
-        private void clearInputs()
-        {
-            tb_header.Clear();
-            tb_body.Clear();
-            lb_id.Content="";
-            lb_sender.Content = "";
-            lb_message.Content = "";
-
-        }
-
-        private void Bt_clear_Click(object sender, RoutedEventArgs e)
+        private void Bt_Clear_Click(object sender, RoutedEventArgs e)
         {
             this.clearInputs();
         }
