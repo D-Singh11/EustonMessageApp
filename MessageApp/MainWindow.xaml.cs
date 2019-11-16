@@ -31,6 +31,7 @@ namespace MessageApp
         public MainWindow()
         {
             InitializeComponent();
+            //tb_body.Text = "Sender:\nSubject:\nText:";
             dataOps = new DataOperations();
             testSpeak = dataOps.AbberviationList;
             incidentList = dataOps.IncidentList;
@@ -103,28 +104,38 @@ namespace MessageApp
 
         private void build_Email_Message(string body)
         {
-            string[] msg = body.Split(',');
-            if (msg.Count() != 3)
+            string messageBody = body.ToLower();
+            string senderLb = "sender:";
+            string subjectLb = "subject:";
+            string textLb = "text:";
+            int a = messageBody.IndexOf(senderLb);
+            int b = messageBody.IndexOf(subjectLb);
+            int c = messageBody.IndexOf(textLb);
+            string sender, subject, text;
+            try
             {
-                throw new Exception("Enter message comprising sender, subject and message separated by comma.");
+                 sender = messageBody.Substring(a + senderLb.Length, b - senderLb.Length);
+                 subject = messageBody.Substring(b + subjectLb.Length, c - subjectLb.Length - b);
+                 text = messageBody.Substring(c + textLb.Length);
+                
+            }
+            catch
+            {
+                throw new Exception("Message body invlaid input.\nLabels must be correctly spelt and in following order:\nsender:\nsubject:\ntext:");
             }
             Email email = new Email();
             email.MessageId = tb_header.Text;
-            email.Sender = msg[0];
-            email.Subject = msg[1];
-            string messageText = msg[2];
-            if (email.Subject.Contains("SIR"))
+            email.Sender = sender;
+            email.Subject = subject;
+            string messageText = text;
+            if (email.Subject.ToUpper().Contains("SIR"))
             {
                 messageText = build_SIR_Message(messageText);
             }
             email.Message = this.filterURL(messageText);
-
             tb_id.Text = email.MessageId;
             tb_sender.Text = email.Sender;
             tb_message.Text = " Subject: " + email.Subject + "\n Text : " + email.Message;
-
-            //buildTrendingList(email.Message);
-            //buildMentionList(email.Message);
             MessageBox.Show(email.Message);
 
         }
@@ -220,7 +231,7 @@ namespace MessageApp
             string centreCode = Regex.Match(text.Trim(), patternCentreCode).Value;
             if (!Regex.IsMatch(text.Trim(), patternCentreCode))
             {
-                throw new Exception("Invalid centre code.\nIt must be in 00-000-00 format.");
+                throw new Exception("Email text must have centre code in 00-000-00 format.");
             }
             string incidentType = text.Substring(centreCode.Length, 20).ToLower();
             incidentList.ForEach(incident =>
@@ -234,7 +245,7 @@ namespace MessageApp
             });
             if (result =="No")
             {
-                throw new Exception("Unknown incident nature.\nEnter a valid incident nature.");
+                throw new Exception("Unknown incident nature.\nEmail text must have a valid incident nature.");
             }
             
             return text.Replace(centreCode + " " + result, "");

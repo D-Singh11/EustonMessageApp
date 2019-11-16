@@ -19,7 +19,7 @@ namespace BusinessLayer
             {
                 if (!Regex.IsMatch(value, patternSender))
                 {
-                    throw new Exception("Message must have sender's Twitter ID between 1-15 characters predcedded by @");
+                    throw new Exception("Invalid sender's twitter handle.\nMessage must have sender's Twitter ID between 1-15 characters predcedded by @");
                 }
                 Match result = Regex.Match(value, patternSender);
                 sender = result.Value;
@@ -33,7 +33,7 @@ namespace BusinessLayer
             {
                 if (!Regex.IsMatch(value, patternText))
                 {
-                    throw new Exception("Message must have tweet text between 1-140 characters");
+                    throw new Exception("Invalid tweet text.\nMessage must have tweet text between 1-140 characters");
                 }
                 Match result = Regex.Match(value, patternText);
                 message = result.Value;

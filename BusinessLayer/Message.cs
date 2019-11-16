@@ -20,7 +20,7 @@ namespace BusinessLayer
                 }
                 else
                 {
-                    throw new ArgumentException("Header : Enter 10 charcters meassage code");
+                    throw new ArgumentException("Incorrect Header input.\n Enter 10 charcters meassage code.");
                 }
                 messageID = value;
 
@@ -39,7 +39,7 @@ namespace BusinessLayer
             //int code = (int)messageType;
             if (messageType != "s" && messageType != "m" && messageType != "t")
             {
-                throw new ArgumentException("Header : Message code must begin with M,S or T only");
+                throw new ArgumentException("Incorrect Header input.\nMessage code must begin with M,S or T only.");
             }
             else
             {
@@ -57,7 +57,7 @@ namespace BusinessLayer
                 valid = code < 48 || code > 57 ? false : true;
                 if (valid == false)
                 {
-                    throw new ArgumentException("Header : only first letter can be alphabet");
+                    throw new ArgumentException("Incorrect Header input.\nOnly first character of message code can be alphabet.");
                 }
             }
             mMessageType = message.Substring(0, 1).ToLower();

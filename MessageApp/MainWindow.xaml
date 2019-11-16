@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <TextBox x:Name="tb_header" HorizontalAlignment="Left" Height="23" Margin="75,20,0,0" TextWrapping="Wrap" Text="Header" VerticalAlignment="Top" Width="122" MaxLength="10"/>
+        <TextBox x:Name="tb_header" HorizontalAlignment="Left" Height="23" Margin="75,20,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="122" MaxLength="10"/>
         <TextBox x:Name="tb_body" HorizontalAlignment="Left" Height="118" Margin="75,59,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="192" AcceptsReturn="True" Text="" MaxLength="156"/>
         <Label x:Name="label" Content="Header" HorizontalAlignment="Left" Margin="22,17,0,0" VerticalAlignment="Top"/>
         <Label x:Name="label_Copy" Content="Body" HorizontalAlignment="Left" Margin="22,49,0,0" VerticalAlignment="Top"/>

@@ -17,7 +17,7 @@ namespace BusinessLayer
             {
                 if (!Regex.IsMatch(value, patternNumber))
                 {
-                    throw new Exception("Message must have sender's phone number between 9-15 digits.");
+                    throw new Exception("Invalid sender's phone number.\nPhone number must start with\"+\" and should be between 9-15 digits.");
                 }
                 Match result = Regex.Match(value, patternNumber);
                 sender = result.Value;
@@ -31,7 +31,7 @@ namespace BusinessLayer
             {
                 if (!Regex.IsMatch(value, patternMessage))
                 {
-                    throw new Exception("Message must have text between 1-140 characters");
+                    throw new Exception("Invalid SMS text.\nMessage Text must be between 1-140 characters only.");
                 }
                 Match result = Regex.Match(value, patternMessage);
                 message = result.Value;
