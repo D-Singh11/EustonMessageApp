@@ -10,23 +10,15 @@ namespace DataLayer
         private Dictionary<string, string> abberviationList = new Dictionary<string, string>();
         private List<string> incidentList = new List<string>();
 
+
         public DataOperations pDataOperations
         {
             get
             {
                 if (_dataOperations == null)
                 {
+                     this.buildIncidentList();
                     _dataOperations = new DataOperations();
-                    incidentList.Add("Theft of Properties");
-                    incidentList.Add("Staff Attack");
-                    incidentList.Add("Device Damage");
-                    incidentList.Add("Raid");
-                    incidentList.Add("Customer Attack");
-                    incidentList.Add("Staff Abuse");
-                    incidentList.Add("Terrorism");
-                    incidentList.Add("Suspicious Incident");
-                    incidentList.Add("Sport Injury");
-                    incidentList.Add("Personal Info Leak");
                 }
                 return _dataOperations;
             }
@@ -55,7 +47,23 @@ namespace DataLayer
 
         public List<string> IncidentList
         {
-            get { return incidentList; }
+            get {
+                return incidentList;
+            }
+        }
+
+        private void buildIncidentList()
+        {
+            this.incidentList.Add("Theft of Properties");
+            this.incidentList.Add("Staff Attack");
+            this.incidentList.Add("Device Damage");
+            this.incidentList.Add("Raid");
+            this.incidentList.Add("Customer Attack");
+            this.incidentList.Add("Staff Abuse");
+            this.incidentList.Add("Terrorism");
+            this.incidentList.Add("Suspicious Incident");
+            this.incidentList.Add("Sport Injury");
+            this.incidentList.Add("Personal Info Leak");
         }
             
     }

@@ -24,10 +24,9 @@ namespace MessageApp
     /// </summary>
     public partial class MainWindow : Window
     {
-        string messageType = "";
         private DataOperations dataOps;
         private Dictionary<string, string> testSpeak;
-        private List<string> incidentList;
+        private List<string> incidentList = new List<string>();
         public MainWindow()
         {
             InitializeComponent();
@@ -104,6 +103,22 @@ namespace MessageApp
 
         private void build_Email_Message(string body)
         {
+            Email email = parseEmail(body);
+
+            if (email.Subject.ToUpper().Contains("SIR"))
+            {
+                parseSirEmailText(email.Message);
+            }
+            email.Message = this.filterURL(email.Message);
+            tb_id.Text = email.MessageId;
+            tb_sender.Text = email.Sender;
+            tb_message.Text = " Subject: " + email.Subject + "\n Text : " + email.Message;
+            MessageBox.Show(email.Message);
+
+        }
+
+        private Email parseEmail(string body)
+        {
             string messageBody = body.ToLower();
             string senderLb = "sender:";
             string subjectLb = "subject:";
@@ -114,10 +129,10 @@ namespace MessageApp
             string sender, subject, text;
             try
             {
-                 sender = messageBody.Substring(a + senderLb.Length, b - senderLb.Length);
-                 subject = messageBody.Substring(b + subjectLb.Length, c - subjectLb.Length - b);
-                 text = messageBody.Substring(c + textLb.Length);
-                
+                sender = messageBody.Substring(a + senderLb.Length, b - senderLb.Length);
+                subject = messageBody.Substring(b + subjectLb.Length, c - subjectLb.Length - b);
+                text = messageBody.Substring(c + textLb.Length);
+
             }
             catch
             {
@@ -127,17 +142,7 @@ namespace MessageApp
             email.MessageId = tb_header.Text;
             email.Sender = sender;
             email.Subject = subject;
-            string messageText = text;
-            if (email.Subject.ToUpper().Contains("SIR"))
-            {
-                messageText = build_SIR_Message(messageText);
-            }
-            email.Message = this.filterURL(messageText);
-            tb_id.Text = email.MessageId;
-            tb_sender.Text = email.Sender;
-            tb_message.Text = " Subject: " + email.Subject + "\n Text : " + email.Message;
-            MessageBox.Show(email.Message);
-
+            return email;
         }
 
         private string filterTextSpeak(string text)
@@ -223,32 +228,51 @@ namespace MessageApp
             return String.Join(" ", data);
         }
 
-        private string build_SIR_Message(string text)
+        private void parseSirEmailText(string text)
+        {
+            string messageBody = text.ToLower();
+            string scLb = "sport centre code:";
+            string incidentLb = "nature of incident:";
+            int a = messageBody.Trim().IndexOf(scLb);
+            int b = messageBody.Trim().IndexOf(incidentLb);
+            string centreCode, incidentType;
+            try
+            {
+                centreCode = text.Trim().Substring(a + scLb.Length, b -scLb.Length).ToLower();
+                incidentType = text.Trim().Substring(b + incidentLb.Length, 20).ToLower();
+                string patternCentreCode = @"^[\d]{2}\-[\d]{3}\-[\d]{2}";
+                
+                if (!Regex.IsMatch(centreCode.Trim(), patternCentreCode))
+                {
+                    throw new Exception("Email text must have centre code in 00-000-00 format.");
+                }
+                buildSirList(centreCode, incidentType);
+
+            }
+            catch
+            {
+                throw new Exception("Missing sports centre or nature of incident.\nLabels must be correctly spelt and in following order:\nsport centre code:\nnature of incident");
+            }
+        }
+
+        private void buildSirList(string centreCode, string incidentType)
         {
             Dictionary<string, string> SIRList = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            string patternCentreCode = @"^[\d]{2}\-[\d]{3}\-[\d]{2}";
             string result = "No";
-            string centreCode = Regex.Match(text.Trim(), patternCentreCode).Value;
-            if (!Regex.IsMatch(text.Trim(), patternCentreCode))
-            {
-                throw new Exception("Email text must have centre code in 00-000-00 format.");
-            }
-            string incidentType = text.Substring(centreCode.Length, 20).ToLower();
-            incidentList.ForEach(incident =>
+
+            this.dataOps.IncidentList.ForEach(incident =>
             {
                 if (incidentType.Contains(incident.ToLower()))
                 {
                     result = incident;
                     SIRList.Add(centreCode, incident);
-                    lb_sirList.Items.Add(centreCode +" "+ incident);
-                }    
+                    lb_sirList.Items.Add(centreCode + " " + incident);
+                }
             });
-            if (result =="No")
+            if (result == "No")
             {
                 throw new Exception("Unknown incident nature.\nEmail text must have a valid incident nature.");
             }
-            
-            return text.Replace(centreCode + " " + result, "");
         }
     }
 }
