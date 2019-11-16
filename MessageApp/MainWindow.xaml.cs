@@ -1,5 +1,6 @@
 ﻿using BusinessLayer;
 using DataLayer;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -40,30 +41,35 @@ namespace MessageApp
         {
             try
             {
-                string header = tb_header.Text;
-                Message msg = new Message();
-                msg.MessageId = header;
-                if (String.IsNullOrWhiteSpace(tb_body.Text))
-                {
-                    throw new Exception("Message body must not be blank.");
-                }
-                else
-                {
-                    string messageBody = Regex.Replace(tb_body.Text, @"\s+", " ");
-                    if (msg.MessageType =="s")
-                    {
-                        build_SMS(messageBody);
-                    }
-                    if (msg.MessageType =="m") { build_Email_Message(messageBody); }
-                    if (msg.MessageType =="t") { build_Twitter_Message(messageBody); }
-                }
-                
+                processMessage();
             }
             catch (Exception error)
             {
                 MessageBox.Show(error.Message,"Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             
+
+        }
+
+        private void processMessage()
+        {
+            
+            Message msg = new Message();
+            msg.MessageId = tb_header.Text;
+            if (String.IsNullOrWhiteSpace(tb_body.Text))
+            {
+                throw new Exception("Message body must not be blank.");
+            }
+            else
+            {
+                string messageBody = Regex.Replace(tb_body.Text, @"\s+", " ");
+                if (msg.MessageType == "s")
+                {
+                    build_SMS(messageBody);
+                }
+                if (msg.MessageType == "m") { build_Email_Message(messageBody); }
+                if (msg.MessageType == "t") { build_Twitter_Message(messageBody); }
+            }
 
         }
 
@@ -76,9 +82,10 @@ namespace MessageApp
             string message = this.filterTextSpeak(body);
             sms.Message = message;
 
-            tb_id.Text = sms.MessageId;
-            tb_sender.Text = sms.Sender;
-            tb_message.Text = sms.Message;
+            lb_id.Content = sms.MessageId;
+            lb_sender.Content = sms.Sender;
+            lb_message.Content = sms.Message;
+            dataOps.saveMessageToFile(sms);
             MessageBox.Show(sms.Message);
             
         }
@@ -91,12 +98,13 @@ namespace MessageApp
             string message = this.filterTextSpeak(body);
             tweet.Message = message;
 
-            tb_id.Text = tweet.MessageId;
-            tb_sender.Text = tweet.Sender;
-            tb_message.Text = tweet.Message;
+            lb_id.Content = tweet.MessageId;
+            lb_sender.Content = tweet.Sender;
+            lb_message.Content = tweet.Message;
 
             buildTrendingList(tweet.Message);
             buildMentionList(tweet.Message);
+            dataOps.saveMessageToFile(tweet);
             MessageBox.Show(tweet.Message);
 
         }
@@ -110,9 +118,10 @@ namespace MessageApp
                 parseSirEmailText(email.Message);
             }
             email.Message = this.filterURL(email.Message);
-            tb_id.Text = email.MessageId;
-            tb_sender.Text = email.Sender;
-            tb_message.Text = " Subject: " + email.Subject + "\n Text : " + email.Message;
+            lb_id.Content = email.MessageId;
+            lb_sender.Content = email.Sender;
+            lb_message.Content = " Subject: " + email.Subject + "\n Text : " + email.Message;
+            dataOps.saveMessageToFile(email);
             MessageBox.Show(email.Message);
 
         }
@@ -142,6 +151,7 @@ namespace MessageApp
             email.MessageId = tb_header.Text;
             email.Sender = sender;
             email.Subject = subject;
+            email.Message = text;
             return email;
         }
 
@@ -273,6 +283,63 @@ namespace MessageApp
             {
                 throw new Exception("Unknown incident nature.\nEmail text must have a valid incident nature.");
             }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string[] fileData = dataOps.InputFromFile;
+                lb_inputData.Items.Clear();
+                foreach (var message in fileData)
+                {
+                    lb_inputData.Items.Add(message);
+
+                }
+                //processMessage(fileData, fileData);
+            }
+            catch (Exception error)
+            {
+                MessageBox.Show(error.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            
+        }
+
+        private void Lb_inputData_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (lb_inputData.SelectedValue == null)
+            {
+                MessageBox.Show("No value Selected", "Warning", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            else
+            {
+                try
+                {
+                    string selctedMessage = lb_inputData.SelectedItem.ToString();
+                    tb_header.Text = selctedMessage.Trim().Substring(0, 10);
+                    tb_body.Text = selctedMessage.Replace(tb_header.Text, "").Trim();
+                    processMessage();
+                }
+                catch (Exception error)
+                {
+                    MessageBox.Show(error.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }  
+            }
+        }
+
+        private void clearInputs()
+        {
+            tb_header.Clear();
+            tb_body.Clear();
+            lb_id.Content="";
+            lb_sender.Content = "";
+            lb_message.Content = "";
+
+        }
+
+        private void Bt_clear_Click(object sender, RoutedEventArgs e)
+        {
+            this.clearInputs();
         }
     }
 }
