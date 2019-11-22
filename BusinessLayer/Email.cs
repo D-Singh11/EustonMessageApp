@@ -9,13 +9,16 @@ namespace BusinessLayer
     {
         private string sender;
         private string subject;
-        private string message;
+        private string messageText;
+        private string centreCode = "n/a";
+        private string incidentNature = "n/a";
 
         public string Sender
         {
             get { return sender; }
             set
             {
+                //a = @"sender+\:"
                 string patternSender = @"\b[\w._%+-]+@[\w.]+\.[A-Za-z]{2,}\b";
                 if (!Regex.IsMatch(value, patternSender))
                 {
@@ -31,28 +34,64 @@ namespace BusinessLayer
             get { return subject; }
             set
             {
-                //string patternSubject = @"\b\s{1}[\+\D\w\s]{1,20}\s\b";
-                if (String.IsNullOrWhiteSpace(value) || value.Length > 20)
+                //a = @"sender+\:"
+                //string pattern = @"sender+\:";
+                //if (!Regex.IsMatch(value, pattern))
+                //{
+                //    throw new Exception("No input for subject.\nPlease provide a subject for email.");
+                //}
+                //Match rewwsult = Regex.Match(value, pattern);
+
+                string patternSubject = @"\b[\+\D\w\s]{4,20}\b";
+                if (!Regex.IsMatch(value, patternSubject))
                 {
-                    throw new Exception("Invalid subject input.\nEmail subject must be between 1-20 characters");
+                    throw new Exception("Invalid subject input.\nEmail sunject must be on 2md line and between 1-20 characters");
                 }
-                //Match result = Regex.Match(value, patternSubject);
-                subject = value;
+                Match result = Regex.Match(value, patternSubject);
+                subject = result.Value;
             }
         }
 
-        public string Message
+        public string MessageText
         {
-            get { return message; }
+            get { return messageText; }
             set
             {
                 string patternText = @"[\+\D\w\s]{1,1028}";
                 if (!Regex.IsMatch(value, patternText))
                 {
-                    throw new Exception("Invalid message text input.\n Email text must be between 1-1028 characters");
+                    throw new Exception("Invalid message text input.\n Email text must be between 1-1028 characters.");
                 }
                 Match result = Regex.Match(value, patternText);
-                message = result.Value;
+                messageText = result.Value;
+            }
+        }
+
+        public string CentreCode
+        {
+            get { return centreCode; }
+            set
+            {
+                string patternText = @"^[\d]{2}\-[\d]{3}\-[\d]{2}";
+                if (!Regex.IsMatch(value, patternText))
+                {
+                    throw new Exception("Invalid sport centre code input.\n SIR email must have a centre code in 00-000-00 format.");
+                }
+                Match result = Regex.Match(value, patternText);
+                centreCode = result.Value;
+            }
+        }
+
+        public string IncidentNature
+        {
+            get { return incidentNature; }
+            set
+            {
+                if (String.IsNullOrWhiteSpace(value) || value.Length > 20)
+                {
+                    throw new Exception("Invalid nature of incident input.\n SIR email must specify a nature of incident in message text.");
+                }
+                incidentNature = value;
             }
         }
     }

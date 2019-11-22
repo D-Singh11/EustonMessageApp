@@ -14,6 +14,8 @@ namespace DataLayer
         private List<Object> messageList = new List<Object>();
         private string[] inputFromFile;
 
+        public DataOperations() { }
+
 
         public DataOperations pDataOperations
         {
@@ -21,7 +23,6 @@ namespace DataLayer
             {
                 if (_dataOperations == null)
                 {
-                     this.buildIncidentList();
                     _dataOperations = new DataOperations();
                 }
                 return _dataOperations;
@@ -52,6 +53,7 @@ namespace DataLayer
         public List<string> IncidentList
         {
             get {
+                buildIncidentList();
                 return incidentList;
             }
         }

@@ -7,18 +7,14 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="1000">
     <Grid>
-        <TextBox x:Name="tb_header" HorizontalAlignment="Left" Height="23" Margin="75,20,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="122" MaxLength="10"/>
-        <TextBox x:Name="tb_body" HorizontalAlignment="Left" Height="118" Margin="75,59,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="192" AcceptsReturn="True" Text="" MaxLength="156"/>
-        <Label x:Name="label" Content="Header" HorizontalAlignment="Left" Margin="22,17,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="label_Copy" Content="Body" HorizontalAlignment="Left" Margin="22,49,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="bt_save" Content="Save" HorizontalAlignment="Left" Margin="75,186,0,0" VerticalAlignment="Top" Width="75" Click="Bt_Save_Click" Height="31"/>
+        <TextBox x:Name="tb_header" HorizontalAlignment="Left" Height="23" Margin="94,54,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="138" MaxLength="10"/>
+        <!--<TextBox x:Name="tb_body" HorizontalAlignment="Left" Height="118" Margin="94,126,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="234" AcceptsReturn="True" Text="" MaxLength="156" Padding="5,2" TextBlock.LineHeight="20" 
+    TextBlock.LineStackingStrategy="BlockLineHeight"/>-->
+        <TextBox x:Name="tb_body" HorizontalAlignment="Left" Height="153" Margin="57,114,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="263" AcceptsReturn="True" Text=""/>
+        <Label x:Name="label" Content="Header" HorizontalAlignment="Left" Margin="25,54,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label_Copy" Content="Body" HorizontalAlignment="Left" Margin="36,83,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="bt_save" Content="Save" HorizontalAlignment="Left" Margin="57,299,0,0" VerticalAlignment="Top" Width="75" Click="Bt_Save_Click" Height="18"/>
         <Label x:Name="error_header" Content="" HorizontalAlignment="Left" Margin="244,17,0,0" VerticalAlignment="Top" Width="280" FontSize="10"/>
-        <Label x:Name="lb_id" Content="" HorizontalAlignment="Left" Margin="94,237,0,0" VerticalAlignment="Top" Width="135" FontSize="10"/>
-        <Label x:Name="lb_sender" Content="" HorizontalAlignment="Left" Margin="76,266,0,0" VerticalAlignment="Top" Width="191" FontSize="10"/>
-        <Label x:Name="lb_message" HorizontalAlignment="Left" Margin="76,295,0,0" VerticalAlignment="Top" Width="216" FontSize="10" Height="95"/>
-        <Label x:Name="label1" Content="Id:" HorizontalAlignment="Left" Margin="22,233,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="label1_Copy" Content="Message" HorizontalAlignment="Left" Margin="15,291,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="label1_Copy1" Content="sender" HorizontalAlignment="Left" Margin="15,264,0,0" VerticalAlignment="Top"/>
         <ListBox x:Name="lb_trendList" HorizontalAlignment="Left" Height="118" Margin="342,279,0,0" VerticalAlignment="Top" Width="130"/>
         <ListBox x:Name="lb_mentionList" HorizontalAlignment="Left" Height="118" Margin="497,279,0,0" VerticalAlignment="Top" Width="130"/>
         <ListBox x:Name="lb_quarantinedList" HorizontalAlignment="Left" Height="118" Margin="653,279,0,0" VerticalAlignment="Top" Width="130"/>
@@ -27,9 +23,23 @@
         <Label x:Name="label2_Copy1" Content="Mention list" HorizontalAlignment="Left" Margin="526,253,0,0" VerticalAlignment="Top"/>
         <Label x:Name="label2_Copy" Content="Quarantined list" HorizontalAlignment="Left" Margin="680,253,0,0" VerticalAlignment="Top"/>
         <Label x:Name="label2" Content="SIR message list" HorizontalAlignment="Left" Margin="828,253,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="button" Content="Open file" HorizontalAlignment="Left" Margin="798,206,0,0" VerticalAlignment="Top" Width="124" Height="23" Click="Button_OpenFile_Click"/>
-        <ListBox x:Name="lb_inputData" HorizontalAlignment="Left" Height="181" Margin="357,20,0,0" VerticalAlignment="Top" Width="565" MouseDoubleClick="Lb_InputData_MouseDoubleClick"/>
-        <Button x:Name="bt_clear" Content="clear" HorizontalAlignment="Left" Margin="215,198,0,0" VerticalAlignment="Top" Width="52" Height="19" Click="Bt_Clear_Click"/>
+        <Button x:Name="button" Content="Open file" HorizontalAlignment="Left" Margin="838,221,0,0" VerticalAlignment="Top" Width="124" Height="23" Click="Button_OpenFile_Click"/>
+        <ListBox x:Name="lb_inputData" HorizontalAlignment="Left" Height="143" Margin="545,54,0,0" VerticalAlignment="Top" Width="417" MouseDoubleClick="Lb_InputData_MouseDoubleClick"/>
+        <Button x:Name="bt_clear" Content="clear" HorizontalAlignment="Left" Margin="215,299,0,0" VerticalAlignment="Top" Width="52" Height="19" Click="Bt_Clear_Click"/>
+        <!--<TextBlock IsHitTestVisible="False" Text=" Enter email text" VerticalAlignment="Center" Margin="76,187,726.6,167" Foreground="DarkGray" Height="66">
+            <TextBlock.Style>
+                <Style TargetType="{x:Type TextBlock}">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Text, ElementName=tb_body}" Value="True">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>-->
+        <TextBlock x:Name="tblock_message_output" HorizontalAlignment="Left" Margin="36,322,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="75" Width="231"/>
+        <Label x:Name="label_Copy1" Content="Body" HorizontalAlignment="Left" Margin="36,83,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>

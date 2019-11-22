@@ -10,8 +10,10 @@ namespace BusinessLayer
         private string pattern = @"^(?<phoneNumber>[\+][\d]{9,15})\s+(?<text>[\w]{1,40})?$";
         string patternNumber = @"^[\+][\d]{9,15}\s";
         string patternMessage = @"\s{1}[\+\D\w\s]{1,140}";
+
         public string Sender
         {
+
             get { return sender; }
             set
             {

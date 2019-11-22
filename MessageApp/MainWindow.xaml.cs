@@ -35,6 +35,7 @@ namespace MessageApp
             dataOps = new DataOperations();
             testSpeak = dataOps.AbberviationList;
             incidentList = dataOps.IncidentList;
+             //tb_body.Text = "Sender: \nSubject: \nText: ";
         }
 
         private void Bt_Save_Click(object sender, RoutedEventArgs e)
@@ -62,12 +63,12 @@ namespace MessageApp
             }
             else
             {
-                string messageBody = Regex.Replace(tb_body.Text, @"\s+", " ");
+                string messageBody = Regex.Replace(tb_body.Text, @"\s+", " ");  // removes extra space
                 if (msg.MessageType == "s")
                 {
                     build_SMS(messageBody);
                 }
-                if (msg.MessageType == "m") { build_Email_Message(messageBody); }
+                if (msg.MessageType == "m") { build_Email_Message(); }
                 if (msg.MessageType == "t") { build_Twitter_Message(messageBody); }
             }
 
@@ -81,10 +82,7 @@ namespace MessageApp
             sms.Sender = body;
             string message = this.filterTextSpeak(body);
             sms.Message = message;
-
-            lb_id.Content = sms.MessageId;
-            lb_sender.Content = sms.Sender;
-            lb_message.Content = sms.Message;
+            tblock_message_output.Text = "Message id: " + sms.MessageId + "\nSender: " + sms.Sender + "\nText: " + sms.Message;
             dataOps.saveMessageToFile(sms);
             MessageBox.Show(sms.Message);
             
@@ -98,31 +96,28 @@ namespace MessageApp
             string message = this.filterTextSpeak(body);
             tweet.Message = message;
 
-            lb_id.Content = tweet.MessageId;
-            lb_sender.Content = tweet.Sender;
-            lb_message.Content = tweet.Message;
-
             buildTrendingList(tweet.Message);
             buildMentionList(tweet.Message);
             dataOps.saveMessageToFile(tweet);
+            tblock_message_output.Text = "Message id: " + tweet.MessageId + "\nSender: " + tweet.Sender + "\nText: " + tweet.Message;
             MessageBox.Show(tweet.Message);
 
         }
 
-        private void build_Email_Message(string body)
+        private void build_Email_Message()
         {
-            Email email = parseEmail(body);
+            Email email = parseEmail();
 
             if (email.Subject.ToUpper().Contains("SIR"))
             {
-                parseSirEmailText(email.Message);
+                buildSirList(email.CentreCode, email.IncidentNature);;
             }
-            email.Message = this.filterURL(email.Message);
-            lb_id.Content = email.MessageId;
-            lb_sender.Content = email.Sender;
-            lb_message.Content = " Subject: " + email.Subject + "\n Text : " + email.Message;
+            email.MessageText = this.filterURL(email.MessageText);
+            tblock_message_output.Text = ("Message id: " + email.MessageId + "\nSender: " + email.Sender + " Subject: " + email.Subject
+                + "Sport centre code: "+ email.CentreCode + "Nature of incident: " + email.IncidentNature + "\nText: " + email.MessageText);
+            
             dataOps.saveMessageToFile(email);
-            MessageBox.Show(email.Message);
+            MessageBox.Show(email.MessageText);
 
         }
 
@@ -209,60 +204,74 @@ namespace MessageApp
             return String.Join(" ", data);
         }
 
-        private Email parseEmail(string body)
+        private Email parseEmail()
         {
-            string messageBody = body.ToLower();
-            string senderLb = "sender:";
-            string subjectLb = "subject:";
-            string textLb = "text:";
-            int a = messageBody.IndexOf(senderLb);
-            int b = messageBody.IndexOf(subjectLb);
-            int c = messageBody.IndexOf(textLb);
-            string sender, subject, text;
-            try
-            {
-                sender = messageBody.Substring(a + senderLb.Length, b - senderLb.Length);
-                subject = messageBody.Substring(b + subjectLb.Length, c - subjectLb.Length - b);
-                text = messageBody.Substring(c + textLb.Length);
-
-            }
-            catch
-            {
-                throw new Exception("Message body invlaid input.\nLabels must be correctly spelt and in following order:\nsender:\nsubject:\ntext:");
-            }
             Email email = new Email();
             email.MessageId = tb_header.Text;
-            email.Sender = sender;
-            email.Subject = subject;
-            email.Message = text;
+            email.Sender = tb_body.GetLineText(0);
+            email.Subject = tb_body.GetLineText(1);
+            int index = 2;
+            string text = "";
+            if (email.Subject.StartsWith("SIR", StringComparison.OrdinalIgnoreCase))
+            {
+                email.CentreCode = tb_body.GetLineText(2);
+                email.IncidentNature = tb_body.GetLineText(3).Trim();
+                index = 4;
+            }
+            for (int i =index; i < tb_body.LineCount; i++)
+            {
+                text = tb_body.GetLineText(i);
+            }
+            email.MessageText = text;
+            
+            
+
+            //string messageBody = tb_body.Text.ToLower();
+            //string senderLb = "sender:";
+            //string subjectLb = "subject:";
+            //string textLb = "text:";
+            //int a = messageBody.IndexOf(senderLb);
+            //int b = messageBody.IndexOf(subjectLb);
+            //int c = messageBody.IndexOf(textLb);
+            //string sender, subject;
+            //try
+            //{
+            //    sender = messageBody.Substring(a + senderLb.Length, b - senderLb.Length);
+            //    subject = messageBody.Substring(b + subjectLb.Length, c - subjectLb.Length - b);
+            //    text = messageBody.Substring(c + textLb.Length);
+
+            //}
+            //catch
+            //{
+            //    throw new Exception("Message body invlaid input.\nLabels must be correctly spelt and in following order:\nsender:\nsubject:\ntext:");
+            //}
+            //Email email = new Email();
+            //email.MessageId = tb_header.Text;
+            //email.Sender = sender;
+            //email.Subject = subject;
+            //email.MessageText = text;
             return email;
         }
 
         private void parseSirEmailText(string text)
         {
-            string messageBody = text.ToLower().Trim();
-            string scLb = "sport centre code:";
-            string incidentLb = "nature of incident:";
-            int a = messageBody.IndexOf(scLb);
-            int b = messageBody.IndexOf(incidentLb);
-            string centreCode, incidentType;
-            try
-            {
-                centreCode = messageBody.Substring(a + scLb.Length, b - scLb.Length);
-                incidentType = messageBody.Substring(b + incidentLb.Length, 20);
-                string patternCentreCode = @"^[\d]{2}\-[\d]{3}\-[\d]{2}";
-                
-                if (!Regex.IsMatch(centreCode.Trim(), patternCentreCode))
-                {
-                    throw new Exception("Email text must have centre code in 00-000-00 format.");
-                }
-                buildSirList(centreCode, incidentType);
+            //string messageBody = text.ToLower().Trim();
+            //string scLb = "sport centre code:";
+            //string incidentLb = "nature of incident:";
+            //int a = messageBody.IndexOf(scLb);
+            //int b = messageBody.IndexOf(incidentLb);
+            //string centreCode, incidentType;
+            //try
+            //{
+            //    centreCode = messageBody.Substring(a + scLb.Length, b - scLb.Length);
+            //    incidentType = messageBody.Substring(b + incidentLb.Length, 20);
+            //    buildSirList(centreCode, incidentType);
 
-            }
-            catch
-            {
-                throw new Exception("Missing sports centre or nature of incident.\nLabels must be correctly spelt and in following order:\nsport centre code:\nnature of incident");
-            }
+            //}
+            //catch
+            //{
+            //    throw new Exception("Missing sports centre or nature of incident.\nLabels must be correctly spelt and in following order:\nsport centre code:\nnature of incident");
+            //}
         }
 
         private void buildSirList(string centreCode, string incidentType)
@@ -270,9 +279,9 @@ namespace MessageApp
             Dictionary<string, string> SIRList = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             string result = "No";
 
-            this.dataOps.IncidentList.ForEach(incident =>
+            this.incidentList.ForEach(incident =>
             {
-                if (incidentType.Contains(incident.ToLower()))
+                if (incidentType.Equals(incident, StringComparison.OrdinalIgnoreCase))
                 {
                     result = incident;
                     SIRList.Add(centreCode, incident);
@@ -289,9 +298,7 @@ namespace MessageApp
         {
             tb_header.Clear();
             tb_body.Clear();
-            lb_id.Content = "";
-            lb_sender.Content = "";
-            lb_message.Content = "";
+            tblock_message_output.Text = "";
 
         }
 
