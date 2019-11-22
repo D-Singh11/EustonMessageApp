@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MessageApp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="1000">
+        Title="MainWindow" Height="501.2" Width="1000">
     <Grid>
         <TextBox x:Name="tb_header" HorizontalAlignment="Left" Height="23" Margin="94,54,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="138" MaxLength="10"/>
         <!--<TextBox x:Name="tb_body" HorizontalAlignment="Left" Height="118" Margin="94,126,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="234" AcceptsReturn="True" Text="" MaxLength="156" Padding="5,2" TextBlock.LineHeight="20" 
@@ -38,7 +38,7 @@
                 </Style>
             </TextBlock.Style>
         </TextBlock>-->
-        <TextBlock x:Name="tblock_message_output" HorizontalAlignment="Left" Margin="36,322,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="75" Width="231"/>
+        <TextBlock x:Name="tblock_message_output" HorizontalAlignment="Left" Margin="57,335,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="113" Width="231"/>
         <Label x:Name="label_Copy1" Content="Body" HorizontalAlignment="Left" Margin="36,83,0,0" VerticalAlignment="Top"/>
 
     </Grid>

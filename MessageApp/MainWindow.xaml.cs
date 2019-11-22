@@ -112,7 +112,7 @@ namespace MessageApp
             {
                 buildSirList(email.CentreCode, email.IncidentNature);;
             }
-            email.MessageText = this.filterURL(email.MessageText);
+            
             tblock_message_output.Text = ("Message id: " + email.MessageId + "\nSender: " + email.Sender + " Subject: " + email.Subject
                 + "Sport centre code: "+ email.CentreCode + "Nature of incident: " + email.IncidentNature + "\nText: " + email.MessageText);
             
@@ -204,6 +204,14 @@ namespace MessageApp
             return String.Join(" ", data);
         }
 
+        //private void validateInputLabel(string label, string pattern, string input, string pos)
+        //{
+        //    if (!Regex.IsMatch(label, pattern))
+        //    {
+        //        throw new Exception("Invalid "+ label + "label.\n"+ label + "label must be on " +pos+ " line in '"+ label +":' format");
+        //    }
+        //}
+
         private Email parseEmail()
         {
             Email email = new Email();
@@ -222,7 +230,7 @@ namespace MessageApp
             {
                 text = tb_body.GetLineText(i);
             }
-            email.MessageText = text;
+            email.MessageText = this.filterURL(text);
             
             
 
@@ -332,7 +340,7 @@ namespace MessageApp
                 {
                     string selctedMessage = lb_inputData.SelectedItem.ToString();
                     tb_header.Text = selctedMessage.Trim().Substring(0, 10);
-                    tb_body.Text = selctedMessage.Replace(tb_header.Text, "").Trim();
+                    tb_body.Text = selctedMessage.Replace(tb_header.Text, "").Replace(",","\n").Trim();
                     //processMessage();                                         //only use if want to process on selction, otherwise click save
                 }
                 catch (Exception error)
