@@ -2,37 +2,46 @@
 
 namespace BusinessLayer
 {
+
+    /// <summary>
+    /// Message class is base class which is inherited by SMS, Tweet and email classes.
+    /// it has one private messageId property
+    /// It is also used to validate the user input for messageId to assure input data is correct.
+    /// </summary>
     public class Message
     {
-        private string messageID;
-        private string mMessageType;
+        private string messageID;       // private variable to store messageId
 
 
-        public string MessageId
+        //************************* 
+        // PROPERTIES 
+        //*************************//  
+
+        // this property is used to get and set  the value of messageId, it returns a string value
+        public string pMessageId
         {
             get { return messageID; }
             set
             {
                 string header = value;
-                if (header.Length == 10)
+                if (header.Length == 10)            //checks if length of input is lon characters long
                 {
-                    validate_MessageType(header);
+                    validate_MessageType(header);  
                 }
-                else
+                else                                // if input text length not 10 characters long throw exception
                 {
                     throw new ArgumentException("Incorrect Header input.\n Enter 10 charcters meassage code.");
                 }
-                messageID = value;
+                messageID = value;              // otherwise assign value to property
 
             }
         }
 
-        public string MessageType
-        {
-            get { return mMessageType; }
-        }
+         //************************* 
+         // Methods
+         // ***************************
 
-
+        // private message used to validate the message type using first character of input
         private void validate_MessageType(string message)
         {
             string messageType = message.Substring(0, 1).ToLower();
@@ -47,6 +56,8 @@ namespace BusinessLayer
             }
         }
 
+
+        // private message validates if the user input after first letter is all digits or not
         private void validate_message_code(string message)
         {
             Boolean valid;
@@ -60,7 +71,6 @@ namespace BusinessLayer
                     throw new ArgumentException("Incorrect Header input.\nOnly first character of message code can be alphabet.");
                 }
             }
-            mMessageType = message.Substring(0, 1).ToLower();
         }
     }
 }

@@ -2,6 +2,7 @@
 using DataLayer;
 using Microsoft.Win32;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,287 +22,158 @@ using System.Windows.Shapes;
 namespace MessageApp
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// This class is used to hold the logic for main window (WPF User interface) of application
+    /// It is used to take user input and display appropriate outputs on appropriate wpf controls.
+    /// It uses the Facade class to interact with the bussiness logic of this application
     /// </summary>
     public partial class MainWindow : Window
     {
-        private DataOperations dataOps;
-        private Dictionary<string, string> testSpeak;
-        private List<string> incidentList = new List<string>();
+        private MessageOperationsFacade msgOps = new MessageOperationsFacade();                 // private instance of facade class
+        private Dictionary<string, int> mentionList = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);      // private dictionary used to store and display mention list(embedded twitter handles) on UI
+        private Dictionary<string, int> trendingList = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);       // private dictionary used to store and display trend list(hashtags) on UI
+        private List<string> quarantinedList = new List<string>();                                                   // private list used to store and display removed URLs on UI
+
         public MainWindow()
         {
             InitializeComponent();
-            //tb_body.Text = "Sender:\nSubject:\nText:";
-            dataOps = new DataOperations();
-            testSpeak = dataOps.AbberviationList;
-            incidentList = dataOps.IncidentList;
-             //tb_body.Text = "Sender: \nSubject: \nText: ";
         }
+
+
+        // This event handler is used to process and save the raw input message.
+        // It takes all the values from the form and process the them to build correct message
 
         private void Bt_Save_Click(object sender, RoutedEventArgs e)
         {
-            try
+            try                                             // uses try block to catch any exception thrown by application
             {
-                processMessage();
+                processMessage();                           // local method used to process the raw message
             }
-            catch (Exception error)
+            catch (Exception error)                             // catch block to catch the exceptions thrown by appplication and prevent application to go into error mode
             {
-                MessageBox.Show(error.Message,"Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(error.Message,"Error", MessageBoxButton.OK, MessageBoxImage.Error);         // show error message using message box
             }
             
 
         }
 
+        // this method is used to process the raw input of messsage to sanitised and structured message.
+        // It is used for both user input and finput from file
         private void processMessage()
-        {
-            
+        { 
             Message msg = new Message();
-            msg.MessageId = tb_header.Text;
-            if (String.IsNullOrWhiteSpace(tb_body.Text))
+            msg.pMessageId = tb_header.Text;                        // assigns user input from header to property, property of message class validates the input
+            if (String.IsNullOrWhiteSpace(tb_body.Text))                    // if blank message body then throw eexception
             {
                 throw new Exception("Message body must not be blank.");
             }
-            else
+            else                                                                    // otherwise process the message
             {
-                string messageBody = Regex.Replace(tb_body.Text, @"\s+", " ");  // removes extra space
-                if (msg.MessageType == "s")
+                string messageType = tb_header.Text.Substring(0, 1).ToLower();
+                List<string> bodyMessage = new List<string>();                      // list of string used to store message body input line by line
+                for (int i = 0; i < tb_body.LineCount; i++)
                 {
-                    build_SMS(messageBody);
+                    bodyMessage.Add(tb_body.GetLineText(i).Trim());                 // get each line of text from message body and add it to list
                 }
-                if (msg.MessageType == "m") { build_Email_Message(); }
-                if (msg.MessageType == "t") { build_Twitter_Message(messageBody); }
-            }
-
-        }
-
-        private void build_SMS(string body)
-        {
-            //string pattern = @"^(?<phoneNumber>[\+][\d]{9,15})\s+(?<text>[\w]{1,40})?$";
-            SMS sms = new SMS();
-            sms.MessageId = tb_header.Text;
-            sms.Sender = body;
-            string message = this.filterTextSpeak(body);
-            sms.Message = message;
-            tblock_message_output.Text = "Message id: " + sms.MessageId + "\nSender: " + sms.Sender + "\nText: " + sms.Message;
-            dataOps.saveMessageToFile(sms);
-            MessageBox.Show(sms.Message);
-            
-        }
-
-        private void build_Twitter_Message(string body)
-        {
-            Tweet tweet = new Tweet();
-            tweet.MessageId = tb_header.Text;
-            tweet.Sender = body;
-            string message = this.filterTextSpeak(body);
-            tweet.Message = message;
-
-            buildTrendingList(tweet.Message);
-            buildMentionList(tweet.Message);
-            dataOps.saveMessageToFile(tweet);
-            tblock_message_output.Text = "Message id: " + tweet.MessageId + "\nSender: " + tweet.Sender + "\nText: " + tweet.Message;
-            MessageBox.Show(tweet.Message);
-
-        }
-
-        private void build_Email_Message()
-        {
-            Email email = parseEmail();
-
-            if (email.Subject.ToUpper().Contains("SIR"))
-            {
-                buildSirList(email.CentreCode, email.IncidentNature);;
-            }
-            
-            tblock_message_output.Text = ("Message id: " + email.MessageId + "\nSender: " + email.Sender + " Subject: " + email.Subject
-                + "Sport centre code: "+ email.CentreCode + "Nature of incident: " + email.IncidentNature + "\nText: " + email.MessageText);
-            
-            dataOps.saveMessageToFile(email);
-            MessageBox.Show(email.MessageText);
-
-        }
-
-        private string filterTextSpeak(string text)
-        {
-            string[] data = text.Trim().Split(' ');
-            string[] message = text.Trim().Split(' ');
-
-            for (int i = 0; i<data.Length; i++)
-            {
-                string key = data[i].ToUpper();
-                if (testSpeak.ContainsKey(key))
+                if (messageType == "s")                                                 // checks if message type is SMS
                 {
-                    string word = key + " <" + this.testSpeak[key] + ">";
-                    message.SetValue(word, i );
-                }     
+                    SMS sms = msgOps.buildSmsMessage(bodyMessage, msg.pMessageId);          // builds the and process the SMS message
+                    tblock_message_output.Text = "Message id: " + sms.pMessageId + "\nSender: " + sms.pSender + "\nText: " + sms.pMessageText;          // display processed message on UI
+                    MessageBox.Show("Message has been sucessfully processed.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.Information);             // message box updates the user on sucessful message processing
+                }
+                if (messageType == "m")                                                             // checks if message type is Email
+                {
+                    Email email = msgOps.buildEmailMessage(bodyMessage, msg.pMessageId);            // builds the and process the Email message
+                    if (email.pSubject.ToUpper().Contains("SIR"))
+                    {
+                        lb_sirList.Items.Add(email.pCentreCode + ": " + email.pIncidentNature.ToUpper());    // build SIR list
+                    }
+                    displayQuarantinedList();                                                   // show removed URLs in list
+                    
+                    tblock_message_output.Text = ("Message id: " + email.pMessageId + "\nSender: " + email.pSender + "\nSubject: " + email.pSubject         // display processed message on UI
+                    + "\nSport centre code: " + email.pCentreCode + "\nNature of incident: " + email.pIncidentNature.ToUpper() + "\nText: " + email.pMessageText);
+
+                    MessageBox.Show(email.pMessageText, "Confirmation", MessageBoxButton.OK, MessageBoxImage.Information);                        // message box updates the user on sucessful message processing
+                }
+                if (messageType == "t")                                                                     // checks if message type is Tweet
+                {
+                    Tweet tweet = msgOps.buildTwitterMessage(bodyMessage, msg.pMessageId);                  // builds the and process the Tweet message
+                    buildTrendingList(tweet.pMessageText);                                                  // builds and display trend list  (hastags)                            
+                    buildMentionList(tweet.pMessageText);                                                   // build and display mention list (embedded twitter handle in messageText)
+                    tblock_message_output.Text = "Message id: " + tweet.pMessageId + "\nSender: " + tweet.pSender + "\nText: " + tweet.pMessageText;        // display processed message on UI
+                    MessageBox.Show(tweet.pMessageText, "Confirmation", MessageBoxButton.OK, MessageBoxImage.Information);                     // message box updates the user on sucessful message processing
+
+                }
             }
-            return String.Join(" ", message);
+
         }
 
+        // this method is used to build the trend list - a list of hashtags used in the message text
+        // it takes message text as string input'
+        // display the build list on UI using listbox control
         private void buildTrendingList(string text)
         {
-            Dictionary<string, int> trendingList = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
-            string patternHashtag = @"[\#][\w]{1,35}";
+            string patternHashtag = @"[\#][\w]{1,35}";          // regex pattern to detect hashtag in message text
             MatchCollection result = Regex.Matches(text, patternHashtag);
 
             foreach (var item in result)
             {
                 string key = item.ToString();
                 int val;
-                if (trendingList.TryGetValue(key, out val))
+                if (trendingList.TryGetValue(key, out val))                 // checks if hashtag already exist on list
                 {
-                    trendingList[key] = val + 1;
-                } else
+                    trendingList[key] = val + 1;                            // it does then add 1 to previous value to count the times it has been used
+                }
+                else                                                        // otherwise add it to trending list using key value pair
                 {
                     trendingList.Add(key, 1);
                 }
             }
+            lb_trendList.Items.Clear();
             foreach (var item in trendingList)
             {
-                lb_trendList.Items.Add(item);
+                lb_trendList.Items.Add(item);                   // add items to UI listbox control
             }
 
         }
 
         private void buildMentionList(string text)
         {
-            string pattern = @"[\@][\w]{1,15}";
-            List<string> mentionList = new List<string>();
+            string pattern = @"[\@][\w]{1,15}";                      // regex pattern to detect embedded twitter handles in message text
             MatchCollection result = Regex.Matches(text, pattern);
+
             foreach (var item in result)
             {
-                if (!mentionList.Contains(item.ToString().ToLower()))
+                string key = item.ToString();
+                int val;
+                if (mentionList.TryGetValue(key, out val))          // checks if twitter id already exist on list
                 {
-                    mentionList.Add(item.ToString());
+                    mentionList[key] = val + 1;                     // it does then add 1 to previous value to count the times it has been used
+                }
+                else                                                // otherwise add it to trending list using key value pair
+                {
+                    mentionList.Add(key, 1);
                 }
             }
-            lb_mentionList.ItemsSource = mentionList;
-
-        }
-
-        private string filterURL(string text)
-        {
-            //string patternSender = @"\.[\w\D]{2,}$";
-            //List<string> urls = Regex.Matches(text, patternSender).Cast<Match>().Select(item => item.Value).ToList();
-            string patternUrlEnd = @"\.[\w\D]{2,}$";
-
-            List<string> quarantinedList = new List<string>();
-            string[] data = text.Trim().Split(' ');
-
-            for (int i = 0; i < data.Length; i++)
+            lb_mentionList.Items.Clear();
+            foreach (var item in mentionList)
             {
-                string key = data[i].ToLower();
-                if (key.StartsWith("www") || key.StartsWith("http") && Regex.IsMatch(text, patternUrlEnd))
-                {
-                    data.SetValue("<URL Quarantined>", i);
-                    if (!quarantinedList.Contains(key))
-                    {
-                        quarantinedList.Add(key);
-                    }
-                }
+                lb_mentionList.Items.Add(item);                     // add items to UI listbox control
             }
-            lb_quarantinedList.ItemsSource = quarantinedList;
-            return String.Join(" ", data);
+
         }
 
-        //private void validateInputLabel(string label, string pattern, string input, string pos)
-        //{
-        //    if (!Regex.IsMatch(label, pattern))
-        //    {
-        //        throw new Exception("Invalid "+ label + "label.\n"+ label + "label must be on " +pos+ " line in '"+ label +":' format");
-        //    }
-        //}
 
-        private Email parseEmail()
+        // this method is used to retrieve list of quarantined URLs from the business layer and
+        // display them on user interface using listbox  control
+        private void displayQuarantinedList()
         {
-            Email email = new Email();
-            email.MessageId = tb_header.Text;
-            email.Sender = tb_body.GetLineText(0);
-            email.Subject = tb_body.GetLineText(1);
-            int index = 2;
-            string text = "";
-            if (email.Subject.StartsWith("SIR", StringComparison.OrdinalIgnoreCase))
-            {
-                email.CentreCode = tb_body.GetLineText(2);
-                email.IncidentNature = tb_body.GetLineText(3).Trim();
-                index = 4;
-            }
-            for (int i =index; i < tb_body.LineCount; i++)
-            {
-                text = tb_body.GetLineText(i);
-            }
-            email.MessageText = this.filterURL(text);
-            
-            
-
-            //string messageBody = tb_body.Text.ToLower();
-            //string senderLb = "sender:";
-            //string subjectLb = "subject:";
-            //string textLb = "text:";
-            //int a = messageBody.IndexOf(senderLb);
-            //int b = messageBody.IndexOf(subjectLb);
-            //int c = messageBody.IndexOf(textLb);
-            //string sender, subject;
-            //try
-            //{
-            //    sender = messageBody.Substring(a + senderLb.Length, b - senderLb.Length);
-            //    subject = messageBody.Substring(b + subjectLb.Length, c - subjectLb.Length - b);
-            //    text = messageBody.Substring(c + textLb.Length);
-
-            //}
-            //catch
-            //{
-            //    throw new Exception("Message body invlaid input.\nLabels must be correctly spelt and in following order:\nsender:\nsubject:\ntext:");
-            //}
-            //Email email = new Email();
-            //email.MessageId = tb_header.Text;
-            //email.Sender = sender;
-            //email.Subject = subject;
-            //email.MessageText = text;
-            return email;
+            quarantinedList = msgOps.retrieveQuarantinedList();             //retrieve list of removed URLs
+            lb_quarantinedList.ItemsSource = quarantinedList;               // add them to the UI listbox
+            lb_quarantinedList.Items.Refresh();
         }
 
-        private void parseSirEmailText(string text)
-        {
-            //string messageBody = text.ToLower().Trim();
-            //string scLb = "sport centre code:";
-            //string incidentLb = "nature of incident:";
-            //int a = messageBody.IndexOf(scLb);
-            //int b = messageBody.IndexOf(incidentLb);
-            //string centreCode, incidentType;
-            //try
-            //{
-            //    centreCode = messageBody.Substring(a + scLb.Length, b - scLb.Length);
-            //    incidentType = messageBody.Substring(b + incidentLb.Length, 20);
-            //    buildSirList(centreCode, incidentType);
 
-            //}
-            //catch
-            //{
-            //    throw new Exception("Missing sports centre or nature of incident.\nLabels must be correctly spelt and in following order:\nsport centre code:\nnature of incident");
-            //}
-        }
-
-        private void buildSirList(string centreCode, string incidentType)
-        {
-            Dictionary<string, string> SIRList = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            string result = "No";
-
-            this.incidentList.ForEach(incident =>
-            {
-                if (incidentType.Equals(incident, StringComparison.OrdinalIgnoreCase))
-                {
-                    result = incident;
-                    SIRList.Add(centreCode, incident);
-                    lb_sirList.Items.Add(centreCode + " " + incident);
-                }
-            });
-            if (result == "No")
-            {
-                throw new Exception("Unknown incident nature.\nEmail text must have a valid incident nature.");
-            }
-        }
-
+        // this method is used to clear the values from the form
         private void clearInputs()
         {
             tb_header.Clear();
@@ -310,49 +182,58 @@ namespace MessageApp
 
         }
 
-        private void Button_OpenFile_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                string[] fileData = dataOps.InputFromFile;
-                lb_inputData.Items.Clear();
-                foreach (var message in fileData)
-                {
-                    lb_inputData.Items.Add(message);
-                }
-            }
-            catch (Exception error)
-            {
-                MessageBox.Show(error.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            
-        }
 
+        // This event hadnler is used to handle the mousedoubleClick event of input data listbox.
+        // Once user double click on the uploaded message in the list box, it is assigned to the input header and message bosy controls
+        // so that user can inspect it before processing
         private void Lb_InputData_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (lb_inputData.SelectedValue == null)
+            if (lb_inputData.SelectedValue == null)             // checks if selected item has null value and show error message if it is null
             {
                 MessageBox.Show("No value Selected", "Warning", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            else
+            else                                                                    // otherwise load the selected item/message to header and message body controls
             {
                 try
                 {
-                    string selctedMessage = lb_inputData.SelectedItem.ToString();
-                    tb_header.Text = selctedMessage.Trim().Substring(0, 10);
-                    tb_body.Text = selctedMessage.Replace(tb_header.Text, "").Replace(",","\n").Trim();
-                    //processMessage();                                         //only use if want to process on selction, otherwise click save
+                    string selectedMessage = lb_inputData.SelectedItem.ToString();
+                    tb_header.Text = selectedMessage.Trim().Substring(0, 10);                        // assign the messageid from selected message to header textbox
+                    tb_body.Text = selectedMessage.Replace(tb_header.Text, "").Replace(",","\n").Trim();                // assign the message body from selected message to body textbox
                 }
-                catch (Exception error)
+                catch (Exception error)                     // catch block to catch exceptions and stop application to go into break mode
                 {
-                    MessageBox.Show(error.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(error.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);            // show error message
                 }  
             }
         }
 
+        // This event hadnler is used to upload a data file from file system when user click on "upload file button
+        // Once user double click on the uploaded message in the list box, it is assigned to the input header and message bosy controls
+        // so that user can inspect it before processing
+        private void Button_OpenFile_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string[] fileData = msgOps.retrieveFileInput();             // uses method of data operation class to read input file's data and store to array of string
+                lb_inputData.Items.Clear();                                 // clear previous entries from the uploaded lixt box control to display recently uploaded messages
+                foreach (var message in fileData)
+                {
+                    lb_inputData.Items.Add(message);                        // add input message to listbox control
+                }
+            }
+            catch (Exception error)                                          // catch block to catch exceptions and stop application to go into break mode
+            {
+                MessageBox.Show(error.Message, "File not foud", MessageBoxButton.OK, MessageBoxImage.Error);                // show error message
+            }
+
+        }
+
+        // this event handler is raised when user clicks on the "clear inputs button"
+        // it is used to clear thethe form
         private void Bt_Clear_Click(object sender, RoutedEventArgs e)
         {
-            this.clearInputs();
+            this.clearInputs();                 // calls local method to clear input form
         }
+
     }
 }

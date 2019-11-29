@@ -7,7 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageApp", "MessageApp\Me
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLayer", "BusinessLayer\BusinessLayer.csproj", "{461CFD71-2440-4BA7-BFD7-FD1920CF8D2D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataLayer", "DataLayer\DataLayer.csproj", "{0472FFE4-1BBA-4AAD-8DF7-07155A06ADC3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataLayer", "DataLayer\DataLayer.csproj", "{0472FFE4-1BBA-4AAD-8DF7-07155A06ADC3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestMessageApp", "TestMessageApp\TestMessageApp.csproj", "{82A2E105-7EE1-4694-A57C-10EE6A411161}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{0472FFE4-1BBA-4AAD-8DF7-07155A06ADC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0472FFE4-1BBA-4AAD-8DF7-07155A06ADC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0472FFE4-1BBA-4AAD-8DF7-07155A06ADC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82A2E105-7EE1-4694-A57C-10EE6A411161}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82A2E105-7EE1-4694-A57C-10EE6A411161}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82A2E105-7EE1-4694-A57C-10EE6A411161}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82A2E105-7EE1-4694-A57C-10EE6A411161}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

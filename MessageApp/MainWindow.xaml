@@ -5,27 +5,26 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MessageApp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="501.2" Width="1000">
-    <Grid>
-        <TextBox x:Name="tb_header" HorizontalAlignment="Left" Height="23" Margin="94,54,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="138" MaxLength="10"/>
+        Title="Euston Message Filtering" Height="621.2" Width="995.2">
+    <Grid Background="#FFCDC9C4">
+        <TextBox x:Name="tb_header" HorizontalAlignment="Left" Height="23" Margin="43,77,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="156" MaxLength="10"/>
         <!--<TextBox x:Name="tb_body" HorizontalAlignment="Left" Height="118" Margin="94,126,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="234" AcceptsReturn="True" Text="" MaxLength="156" Padding="5,2" TextBlock.LineHeight="20" 
     TextBlock.LineStackingStrategy="BlockLineHeight"/>-->
-        <TextBox x:Name="tb_body" HorizontalAlignment="Left" Height="153" Margin="57,114,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="263" AcceptsReturn="True" Text=""/>
-        <Label x:Name="label" Content="Header" HorizontalAlignment="Left" Margin="25,54,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="label_Copy" Content="Body" HorizontalAlignment="Left" Margin="36,83,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="bt_save" Content="Save" HorizontalAlignment="Left" Margin="57,299,0,0" VerticalAlignment="Top" Width="75" Click="Bt_Save_Click" Height="18"/>
-        <Label x:Name="error_header" Content="" HorizontalAlignment="Left" Margin="244,17,0,0" VerticalAlignment="Top" Width="280" FontSize="10"/>
-        <ListBox x:Name="lb_trendList" HorizontalAlignment="Left" Height="118" Margin="342,279,0,0" VerticalAlignment="Top" Width="130"/>
-        <ListBox x:Name="lb_mentionList" HorizontalAlignment="Left" Height="118" Margin="497,279,0,0" VerticalAlignment="Top" Width="130"/>
-        <ListBox x:Name="lb_quarantinedList" HorizontalAlignment="Left" Height="118" Margin="653,279,0,0" VerticalAlignment="Top" Width="130"/>
-        <ListBox x:Name="lb_sirList" HorizontalAlignment="Left" Height="118" Margin="808,279,0,0" VerticalAlignment="Top" Width="130"/>
-        <Label x:Name="label2_Copy2" Content="Trend list" HorizontalAlignment="Left" Margin="382,253,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="label2_Copy1" Content="Mention list" HorizontalAlignment="Left" Margin="526,253,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="label2_Copy" Content="Quarantined list" HorizontalAlignment="Left" Margin="680,253,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="label2" Content="SIR message list" HorizontalAlignment="Left" Margin="828,253,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="button" Content="Open file" HorizontalAlignment="Left" Margin="838,221,0,0" VerticalAlignment="Top" Width="124" Height="23" Click="Button_OpenFile_Click"/>
-        <ListBox x:Name="lb_inputData" HorizontalAlignment="Left" Height="143" Margin="545,54,0,0" VerticalAlignment="Top" Width="417" MouseDoubleClick="Lb_InputData_MouseDoubleClick"/>
-        <Button x:Name="bt_clear" Content="clear" HorizontalAlignment="Left" Margin="215,299,0,0" VerticalAlignment="Top" Width="52" Height="19" Click="Bt_Clear_Click"/>
+        <TextBox x:Name="tb_body" HorizontalAlignment="Left" Height="165" Margin="42,126,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="315" AcceptsReturn="True" Text=""/>
+        <Label x:Name="label" Content="Message Header" HorizontalAlignment="Left" Margin="42,55,0,0" VerticalAlignment="Top" FontStyle="Italic" FontWeight="Bold"/>
+        <Label x:Name="label_Copy" Content="Message Body" HorizontalAlignment="Left" Margin="40,104,0,0" VerticalAlignment="Top" FontStyle="Italic" Height="24" FontWeight="Bold"/>
+        <Button x:Name="bt_save" Content="Save" HorizontalAlignment="Left" Margin="192,301,0,0" VerticalAlignment="Top" Width="75" Click="Bt_Save_Click" Height="19"/>
+        <ListBox x:Name="lb_trendList" HorizontalAlignment="Left" Height="163" Margin="609,368,0,0" VerticalAlignment="Top" Width="148"/>
+        <ListBox x:Name="lb_mentionList" HorizontalAlignment="Left" Height="163" Margin="448,368,0,0" VerticalAlignment="Top" Width="144"/>
+        <ListBox x:Name="lb_quarantinedList" HorizontalAlignment="Left" Height="205" Margin="691,88,0,0" VerticalAlignment="Top" Width="254"/>
+        <ListBox x:Name="lb_sirList" HorizontalAlignment="Left" Height="163" Margin="775,368,0,0" VerticalAlignment="Top" Width="176"/>
+        <Label x:Name="label2_Copy2" Content="Trend list" HorizontalAlignment="Left" Margin="494,342,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+        <Label x:Name="label2_Copy1" Content="Mention list" HorizontalAlignment="Left" Margin="635,342,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+        <Label x:Name="label2_Copy" Content="Quarantined list" HorizontalAlignment="Left" Margin="726,56,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+        <Label x:Name="label2" Content="Standard incident report list" HorizontalAlignment="Left" Margin="775,341,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+        <Button x:Name="button" Content="Upload file" HorizontalAlignment="Left" Margin="233,516,0,0" VerticalAlignment="Top" Width="124" Height="23" Click="Button_OpenFile_Click"/>
+        <ListBox x:Name="lb_inputData" HorizontalAlignment="Left" Height="143" Margin="41,368,0,0" VerticalAlignment="Top" Width="316" MouseDoubleClick="Lb_InputData_MouseDoubleClick"/>
+        <Button x:Name="bt_clear" Content="Clear inputs" HorizontalAlignment="Left" Margin="281,301,0,0" VerticalAlignment="Top" Width="76" Height="19" Click="Bt_Clear_Click"/>
         <!--<TextBlock IsHitTestVisible="False" Text=" Enter email text" VerticalAlignment="Center" Margin="76,187,726.6,167" Foreground="DarkGray" Height="66">
             <TextBlock.Style>
                 <Style TargetType="{x:Type TextBlock}">
@@ -38,8 +37,16 @@
                 </Style>
             </TextBlock.Style>
         </TextBlock>-->
-        <TextBlock x:Name="tblock_message_output" HorizontalAlignment="Left" Margin="57,335,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="113" Width="231"/>
-        <Label x:Name="label_Copy1" Content="Body" HorizontalAlignment="Left" Margin="36,83,0,0" VerticalAlignment="Top"/>
+        <TextBlock x:Name="tblock_message_output" HorizontalAlignment="Left" Margin="448,88,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="202" Width="220"/>
+        <Label x:Name="label_Copy1" Content="" HorizontalAlignment="Left" Margin="42,82,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label_Copy2" Content="Insert raw message" HorizontalAlignment="Left" Margin="107,15,0,0" VerticalAlignment="Top" RenderTransformOrigin="5.304,-0.977" FontWeight="Bold" FontSize="14"/>
+        <Label x:Name="label_Copy3" Content="View Sanitized message" HorizontalAlignment="Left" Margin="656,15,0,0" VerticalAlignment="Top" RenderTransformOrigin="5.304,-0.977" FontWeight="Bold" FontSize="14"/>
+        <Label x:Name="label2_Copy3" Content="Uploaded mesages" HorizontalAlignment="Left" Margin="41,343,0,0" VerticalAlignment="Top" FontStyle="Italic" FontWeight="Bold"/>
+        <Label x:Name="label2_Copy4" Content="Processed message" HorizontalAlignment="Left" Margin="474,54,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+        <Border BorderBrush="#FFDDDDDD" BorderThickness="1" HorizontalAlignment="Left" Height="524" Margin="14,44,0,0" VerticalAlignment="Top" Width="375"/>
+        <Border BorderBrush="#FFDDDDDD" BorderThickness="1" HorizontalAlignment="Left" Height="524" Margin="407,45,0,0" VerticalAlignment="Top" Width="563">
+            <Border BorderBrush="#FFDDDDDD" BorderThickness="2" HorizontalAlignment="Left" Height="202" Margin="30.2,42.2,0,0" VerticalAlignment="Top" Width="227"/>
+        </Border>
 
     </Grid>
 </Window>

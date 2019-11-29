@@ -17,11 +17,9 @@ C:\Users\BeyondA\Desktop\CS3\3. Software Engineering\Coursework 1\MessageApp\Mes
 C:\Users\BeyondA\Desktop\CS3\3. Software Engineering\Coursework 1\MessageApp\MessageApp\bin\Debug\MessageApp.exe
 C:\Users\BeyondA\Desktop\CS3\3. Software Engineering\Coursework 1\MessageApp\MessageApp\bin\Debug\MessageApp.pdb
 C:\Users\BeyondA\Desktop\CS3\3. Software Engineering\Coursework 1\MessageApp\MessageApp\obj\Debug\MessageApp.csprojAssemblyReference.cache
-C:\Users\BeyondA\Desktop\CS3\3. Software Engineering\Coursework 1\MessageApp\MessageApp\obj\Debug\MainWindow.g.cs
 C:\Users\BeyondA\Desktop\CS3\3. Software Engineering\Coursework 1\MessageApp\MessageApp\obj\Debug\App.g.cs
 C:\Users\BeyondA\Desktop\CS3\3. Software Engineering\Coursework 1\MessageApp\MessageApp\obj\Debug\MessageApp_MarkupCompile.cache
 C:\Users\BeyondA\Desktop\CS3\3. Software Engineering\Coursework 1\MessageApp\MessageApp\obj\Debug\MessageApp_MarkupCompile.lref
-C:\Users\BeyondA\Desktop\CS3\3. Software Engineering\Coursework 1\MessageApp\MessageApp\obj\Debug\MainWindow.baml
 C:\Users\BeyondA\Desktop\CS3\3. Software Engineering\Coursework 1\MessageApp\MessageApp\obj\Debug\MessageApp.g.resources
 C:\Users\BeyondA\Desktop\CS3\3. Software Engineering\Coursework 1\MessageApp\MessageApp\obj\Debug\MessageApp.Properties.Resources.resources
 C:\Users\BeyondA\Desktop\CS3\3. Software Engineering\Coursework 1\MessageApp\MessageApp\obj\Debug\MessageApp.csproj.GenerateResource.cache
@@ -35,3 +33,5 @@ C:\Users\BeyondA\Desktop\CS3\3. Software Engineering\Coursework 1\MessageApp\Mes
 C:\Users\BeyondA\Desktop\CS3\3. Software Engineering\Coursework 1\MessageApp\MessageApp\bin\Debug\DataLayer.pdb
 C:\Users\BeyondA\Desktop\CS3\3. Software Engineering\Coursework 1\MessageApp\MessageApp\bin\Debug\Newtonsoft.Json.dll
 C:\Users\BeyondA\Desktop\CS3\3. Software Engineering\Coursework 1\MessageApp\MessageApp\bin\Debug\Newtonsoft.Json.xml
+C:\Users\BeyondA\Desktop\CS3\3. Software Engineering\Coursework 1\MessageApp\MessageApp\obj\Debug\MainWindow.g.cs
+C:\Users\BeyondA\Desktop\CS3\3. Software Engineering\Coursework 1\MessageApp\MessageApp\obj\Debug\MainWindow.baml

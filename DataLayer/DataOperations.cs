@@ -8,7 +8,7 @@ namespace DataLayer
 {
     public class DataOperations
     {
-        private DataOperations _dataOperations;
+        private DataOperations dataOps;
         private Dictionary<string, string> abberviationList = new Dictionary<string, string>();
         private List<string> incidentList = new List<string>();
         private List<Object> messageList = new List<Object>();
@@ -17,19 +17,19 @@ namespace DataLayer
         public DataOperations() { }
 
 
-        public DataOperations pDataOperations
+        public DataOperations pDataOps
         {
             get
             {
-                if (_dataOperations == null)
+                if (dataOps == null)
                 {
-                    _dataOperations = new DataOperations();
+                    dataOps = new DataOperations();
                 }
-                return _dataOperations;
+                return dataOps;
             }
         }
 
-        public Dictionary<string, string> AbberviationList
+        public Dictionary<string, string> pAbberviationList
         {
             get {
                 this.retrieveTextSpeak();
@@ -50,7 +50,7 @@ namespace DataLayer
             }
         }
 
-        public List<string> IncidentList
+        public List<string> pIncidentList
         {
             get {
                 buildIncidentList();
@@ -72,7 +72,7 @@ namespace DataLayer
             this.incidentList.Add("Personal Info Leak");
         }
 
-        public string[] InputFromFile
+        public string[] pInputFromFile
         {
             get {
                     OpenFileDialog openFile = new OpenFileDialog();
